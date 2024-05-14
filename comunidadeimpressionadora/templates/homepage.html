@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container mt-3">
+        <h1 style="color: orange">Comunidade Impressionadora - Hashtag Treinamentos</h1>
+        <h2>Alunos, experts e a galera da Hashtag em um só lugar</h2>
+        <hr>
+        {% for post in todos_posts %}
+            <div class="row border mt-4 p-3 meupost">
+                <!-- no bootstrap a largura da tela é 12, então dividiremos em 3 para primeira coluna e 9 para segunda -->
+                <div class="col-2">
+                    <div class="image pe-2">
+                        <!-- url_for(caminho pasta static/fotos_perfil/post.autor.foto_perfil)-->
+                        <img src="{{ url_for('static', filename='fotos_perfil/{}'.format(post.autor.foto_perfil)) }}" class="rounded" width="200" >
+                    </div>
+                    <h3>{{ post.autor.username }}</h3>
+
+                    <div class="row justify-content-center">
+
+                            <strong>Cursos:</strong><br>
+                            {% for curso in post.autor.cursos.split(';') %} <!-- para cada curso em cursos do usuário atual -->
+                                <!-- consultar para verificar as opções de botões: https://getbootstrap.com/docs/5.2/components/buttons/ -->
+                                <button type="button" class="btn btn-info mt-2" disabled>{{ curso }}</button>
+                            {% endfor %}
+
+                    </div>
+
+                </div>
+                <div class="col-10">
+                    <!-- transformando o título do post em um link para edição do post -->
+                    <a style="text-decoration: none" href="{{ url_for('exibir_post', post_id=post.id) }}">
+                        <h3>
+                            {{ post.titulo }}
+                        </h3>
+                        <small class="text-muted" style="font-size: 13px">
+                            Criado em: {{ post.data_criacao.strftime('%d/%m/%Y') }}
+                        </small>
+                    </a>
+                    <p>{{ post.corpo }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+

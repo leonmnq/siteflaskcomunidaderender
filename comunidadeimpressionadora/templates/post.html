@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container mt-3">
+        <div class="row border mt-4 p-3 meupost">
+            <!-- no bootstrap a largura da tela é 12, então dividiremos em 3 para primeira coluna e 9 para segunda -->
+            <div class="col-2">
+                <div class="image pe-2">
+                    <!-- url_for(caminho pasta static/fotos_perfil/post.autor.foto_perfil)-->
+                    <img src="{{ url_for('static', filename='fotos_perfil/{}'.format(post.autor.foto_perfil)) }}" class="rounded" width="200" >
+                </div>
+                <h3>{{ post.autor.username }}</h3>
+
+                <div class="row justify-content-center">
+
+                        <strong>Cursos:</strong><br>
+                        {% for curso in post.autor.cursos.split(';') %} <!-- para cada curso em cursos do usuário atual -->
+                            <!-- consultar para verificar as opções de botões: https://getbootstrap.com/docs/5.2/components/buttons/ -->
+                            <button type="button" class="btn btn-info mt-2" disabled>{{ curso }}</button>
+                        {% endfor %}
+
+                </div>
+
+            </div>
+            <div class="col-10">
+                <h3>
+                    {{ post.titulo }}
+                    {% if form_editarpost %}
+                        <small style="font-size: 15px">
+                            <a href="#form_edicao" >Editar</a> / <a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#excluirModal">Excluir</a>
+                        </small>
+
+                    {% endif %}
+                </h3>
+                <small class="text-muted" style="font-size: 13px">
+                    Criado em: {{ post.data_criacao.strftime('%d/%m/%Y') }}
+                </small>
+                <hr>
+                <p>{{ post.corpo }}</p>
+            </div>
+        </div>
+
+    </div>
+
+{% if form_editarpost %} <!-- se existir um formulário editar post -->
+    <div class="container">
+        <h1>Editar Post</h1>
+        <hr> <!-- desenha uma linha horizontal -->
+        <div class="row">  <!-- linha -->
+            <div class="col">  <!-- primeira coluna -->
+                <form method="POST" action="" id="form_edicao" class="border p-4 mt2"> <!-- method="POST" significa que estão sendo enviadas informações para o site, action="" é tudo o que aquele formulário irá fazer, como tratamos tudo internamente, o valor fica vazio, class="border" coloca uma borda no formulário, p-4 padding = 4, mt-2 margin top = 2-->
+
+                    {{ form_editarpost.csrf_token }}  <!-- token de segurança sempre abaixo da tag form -->
+
+                    <fieldset>
+                        <legend>Editar Post</legend>  <!-- bootstrap usa <legend> como título do formulário dentro do <fieldset> -->
+                        <fieldset>
+                            <div class="form-group">
+                                {{ form_editarpost.titulo.label(class="form-control-label") }}  <!-- rótulo -->
+
+                                {% if form_editarpost.titulo.errors %}  <!-- se houver erro -->
+
+                                    {{ form_editarpost.titulo(class="form-control is-invalid") }}  <!-- preenchimento inválido -->
+
+                                    <div class="invalid-feedback">
+                                        {% for erro in form_editarpost.titulo.errors %}
+                                            {{ erro }}
+                                        {% endfor %}
+                                    </div>
+
+                                {% else %}  <!-- senão -->
+                                    {{ form_editarpost.titulo(class="form-control") }}  <!-- campo formulário (caixa de texto) -->
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_editarpost.corpo.label(class="form-control-label") }}
+                                {% if form_editarpost.corpo.errors %}  <!-- se houver erro -->
+
+                                    {{ form_editarpost.corpo(class="form-control is-invalid") }}  <!-- preenchimento inválido -->
+
+                                    <div class="invalid-feedback">
+                                        {% for erro in form_editarpost.corpo.errors %}
+                                            {{ erro }}
+                                        {% endfor %}
+                                    </div>
+
+                                {% else %}  <!-- senão -->
+                                    {{ form_editarpost.corpo(class="form-control") }}  <!-- campo formulário (caixa de texto) -->
+                                {% endif %}
+                            </div>
+                        </fieldset>
+                        {{ form_editarpost.botao_submit_confirmaredicao(class="btn btn-primary mt-2") }}
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- https://getbootstrap.com/docs/5.2/components/modal/ -->
+
+<!-- Modal (PopUp de confirmação de exclusão) -->
+<div class="modal fade" id="excluirModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Atenção!</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Você quer realmente excluir esse post? (Essa ação não pode ser desfeita)
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+        <!-- Para excluir o post é necessário ter o método "POST" no form e executar a ação chamando a função 'excluir_post' com o parâmetro id do post -->
+        <!-- E o type do botão precisa ser "submit" -->
+        <form method="POST" action="{{ url_for('excluir_post', post_id=post.id) }}">
+            {{ form_editarpost.csrf_token }}  <!-- token de segurança sempre abaixo da tag form -->
+            <button type="submit" class="btn btn-danger">Excluir Post</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

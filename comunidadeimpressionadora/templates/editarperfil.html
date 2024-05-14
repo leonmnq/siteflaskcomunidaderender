@@ -1,0 +1,77 @@
+{% extends 'perfil.html' %}  <!-- extensão do perfil.html -->
+
+{% block form_editar_perfil %}
+    <div class="container">
+        <hr>
+        <div class="row">  <!-- linha -->
+            <div class="col">
+                <!-- SEMPRE QUE FOR FAZER UPLOAD DE UM ARQUIVO, É OBRIGATÓRIO COLOCAR DENTRO DA TAG FORM: 'enctype="multipart/form-data"' para que a extensão do arquivo seja reconhecida -->
+                <form method="POST" action="" class="border p-4 mt2" enctype="multipart/form-data"> <!-- method="POST" significa que estão sendo enviadas informações para o site, action="" é tudo o que aquele formulário irá fazer, como tratamos tudo internamente, o valor fica vazio, class="border" coloca uma borda no formulário, p-4 padding = 4, mt-2 margin top = 2-->
+                    {{ form_editarperfil.csrf_token }}  <!-- token de segurança sempre abaixo da tag form -->
+                    <fieldset>
+                        <legend>Editar Perfil</legend>  <!-- bootstrap usa <legend> como título do formulário dentro do <fieldset> -->
+                        <fieldset>
+                            <div class="form-group">
+                                {{ form_editarperfil.username.label(class="form-control-label") }}
+                                {% if form_editarperfil.username.errors %}  <!-- se houver erro -->
+
+                                    {{ form_editarperfil.username(class="form-control is-invalid") }}  <!-- preenchimento inválido -->
+
+                                    <div class="invalid-feedback">
+                                        {% for erro in form_editarperfil.username.errors %}
+                                            {{ erro }}
+                                        {% endfor %}
+                                    </div>
+
+                                {% else %}  <!-- senão -->
+                                    {{ form_editarperfil.username(class="form-control") }}  <!-- campo formulário (caixa de texto) -->
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form_editarperfil.email.label(class="form-control-label") }}
+                                {% if form_editarperfil.email.errors %}  <!-- se houver erro -->
+
+                                    {{ form_editarperfil.email(class="form-control is-invalid") }}  <!-- preenchimento inválido -->
+
+                                    <div class="invalid-feedback">
+                                        {% for erro in form_editarperfil.email.errors %}
+                                            {{ erro }}
+                                        {% endfor %}
+                                    </div>
+
+                                {% else %}  <!-- senão -->
+                                    {{ form_editarperfil.email(class="form-control") }}  <!-- campo formulário (caixa de texto) -->
+                                {% endif %}
+                            </div>
+                            <div>
+                                {{ form_editarperfil.foto_perfil.label }}
+                                {{ form_editarperfil.foto_perfil(class="form-control-file") }}
+                                {% if form_editarperfil.foto_perfil.errors %}
+                                    {% for erro in form_editarperfil.foto_perfil.errors %}
+                                        <span class="text-danger">
+                                            {{ erro }}
+                                        </span><br>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <hr>
+
+                            <p>Cursos</p>
+                            <!-- for para escrever os check boxes dos cursos -->
+                            {% for campo in form_editarperfil %}
+                                {% if 'curso_' in campo.name %}
+                                    <div class="form-group">
+                                        {{ campo(class="form-check-input") }}
+                                        {{ campo.label(class="form-check-label") }}
+                                    </div>
+                                {% endif %}
+                            {% endfor%}
+
+                        </fieldset>
+                        {{ form_editarperfil.botao_submit_confirmaredicao(class="btn btn-primary mt-2") }}
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>>
+{% endblock %}

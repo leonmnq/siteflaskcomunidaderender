@@ -1,0 +1,67 @@
+<nav class="navbar navbar-expand-lg bg-light"> <!-- cria barra de navegação -->
+  <div class="container-fluid container"> <!-- div para formatação -->
+    <a class="navbar-brand" href="{{ url_for('homepage') }}">Comunidade Impressionadora</a> <!-- link -->
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent"> <!-- div para formatação -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!-- lista de itens -->
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{{ url_for('homepage') }}">Início</a> <!-- link -->
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('usuarios') }}">Usuários</a> <!-- link -->
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('contato') }}">Contato</a> <!-- link -->
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link disabled">Disabled</a>
+        </li>
+      </ul>
+
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Procurar" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Procurar</button>
+      </form>
+
+      <ul class="d-flex navbar-nav">
+
+        {% if current_user.is_authenticated %}  <!-- se o usuário atual está com o login feito -->
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('criar_post') }}">Criar Post</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('perfil') }}">Meu Perfil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('sair') }}">Sair</a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('login') }}">Criar Conta</a>
+          </li>
+        {% endif %}
+      </ul>
+
+    </div>
+  </div>
+</nav>
