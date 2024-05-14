@@ -8,12 +8,16 @@ import os  # nesse caso vai nos permitir trabalhar com variáveis de ambiente (l
 
 app = Flask(__name__)  # essa linha permite que o flask entenda que nosso código é um site e possibilita a interligação de várias pastas, arquivos, páginas html...
 
-app.config['SECRET_KEY'] = '0c841c3215b516595caba780abfd8d72'  # token para segurança do site
+
 
 if os.getenv("DATABASE_URL"): # se existe essa variável de ambiente, DATABASE_URL...
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")  # então nosso app.config será essa variável de ambiente
 else:  # caso contrário...
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///comunidade.db'  # configuração do banco de dados local
+
+app.config['SECRET_KEY'] = '0c841c3215b516595caba780abfd8d72'  # token para segurança do site
+
+app.config["UPLOAD_FOLDER"] = "static/fotos_perfil"  # define onde as fotos serão armazenadas
 
 database = SQLAlchemy(app)
 
