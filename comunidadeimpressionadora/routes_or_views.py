@@ -255,10 +255,43 @@ def exibir_post(post_id):  # nossa função terá que receber obrigatóriamente 
 @login_required
 def excluir_post(post_id):
     post = Post.query.get(post_id)  # a variável post recebe o id daquele post
-    if current_user == post.autor: # se o usuário atual é dono do post
+    if current_user == post.autor:  # se o usuário atual é dono do post
         database.session.delete(post)
         database.session.commit()
         flash('Seu post foi excluído.', 'alert-warning')
         return redirect(url_for('homepage'))
     else:
         abort(403)  # erro de proibido, não tem permissão para requisitar a ação
+
+
+@app.route('/perfil/<autorizacao>/excluir', methods=['GET', 'POST'])
+@login_required
+def excluir_usuario(autorizacao):
+    usuario = Usuario.query.filter_by(email=current_user.email).first()
+    #usuario = Usuario.query.get(id)  # a variável usuario recebe o id daquele usuario
+    qtde_posts = current_user.contar_posts()
+    if autorizacao == str(current_user.id):  # verifica se a função está sendo chamada pelo botão de Excluir Usuario (tem falha, corrigir depois)
+        if current_user.id == usuario.id:  # se o usuário atual é dono da conta
+            if qtde_posts == 0:  # se não tem posts
+                logout_user()  # desloga o usuário (garantia)
+                database.session.delete(usuario)  # exclui a conta do banco
+                database.session.commit()  # registra a exclusão
+                flash('Sua conta foi excluída.', 'alert-warning')
+                return redirect(url_for('homepage'))
+            else:
+                procurar_post = Post.query.filter_by(id_usuario=current_user.id).first()  # variável post recebe o primeiro post encontrado do usuario atual na coluna id_usuario da tabela post
+                flash('Você deverá excluir seus posts antes de excluir sua conta.', 'alert-warning')
+                return redirect(url_for('exibir_post', post_id=procurar_post.id))
+        else:
+            abort(403)  # erro de proibido, não tem permissão para requisitar a ação
+    else:
+        abort(403)  # erro de proibido, não tem permissão para requisitar a ação
+
+# exclusão de usuário criada por mim
+# with app.app_context():
+#     usuario_encontrado = Usuario.query.first()  # busca o primeiro resultado da tabela Usuario
+#     id = usuario_encontrado.id
+#     usuario = database.session.get(Usuario, id)
+#     #database.session.flush()
+#     database.session.delete(usuario)
+#     database.session.commit()

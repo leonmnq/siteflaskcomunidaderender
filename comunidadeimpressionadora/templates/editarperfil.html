@@ -69,9 +69,46 @@
 
                         </fieldset>
                         {{ form_editarperfil.botao_submit_confirmaredicao(class="btn btn-primary mt-2") }}
+
+
+
                     </fieldset>
                 </form>
             </div>
         </div>
-    </div>>
+    </div>
+
+<a href="#" class="text-danger" data-bs-toggle="modal" data-bs-target="#excluirModal">Excluir Usuario</a>
+
+
+
+<!-- https://getbootstrap.com/docs/5.2/components/modal/ -->
+
+<!-- Modal (PopUp de confirmação de exclusão) -->
+<div class="modal fade" id="excluirModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Atenção!</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Você quer realmente excluir sua conta? (Essa ação não pode ser desfeita)
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+
+        <!-- Para excluir a conta é necessário ter o método "POST" no form e executar a ação chamando a função 'excluir_usuario' -->
+        <!-- E o type do botão precisa ser "submit" -->
+        <form method="POST" action="{{ url_for('excluir_usuario', autorizacao=current_user.id) }}">
+            {{ form_editarperfil.csrf_token }}  <!-- token de segurança sempre abaixo da tag form -->
+
+            <button type="submit" class="btn btn-danger">Excluir Usuario</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
