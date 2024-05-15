@@ -48,6 +48,7 @@ login_manager.login_message = 'Faça login para acessar essa página.'  # coment
 login_manager.login_message_category = 'alert-info'  # alert-info = azul claro # consultar para ver as possíveis cores: https://getbootstrap.com/docs/5.2/components/alerts/
 
 
+
 """
 PARA CRIAR AS TABELAS DO BANCO DE DADOS AUTOMATICAMENTE CASO AINDA NÃO EXISTAM
 """
