@@ -36,3 +36,4 @@ class Post(database.Model):  # a subclasse Post também é uma extensão do data
     # data_criacao = database.Column(database.DateTime, nullable=False, default=datetime.utcnow())  #datetime.utcnow() é obsoleto. O correto agora é datetime.now(timezone.utc)
     data_criacao = database.Column(database.DateTime, nullable=False, default=datetime.utcnow)
     id_usuario = database.Column(database.Integer, database.ForeignKey('usuario.id'), nullable=False)  # ForeignKey é a chave que cria a relação entre o post e o usuário
+
